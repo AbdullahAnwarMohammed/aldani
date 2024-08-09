@@ -16,20 +16,25 @@
                 <div class="col-auto ms-auto d-print-none">
                     <div class="btn-list">
 
+                        @can('قائمة المستويات')
+                            <a href="{{ route('admin.almustawayat.index') }}" class="btn btn-dark">المستويات</a>
+                        @endcan
 
-                        <a href="{{ route('admin.almustawayat.index') }}" class="btn btn-dark">المستويات</a>
-                        <a href="#" class="openModal btn btn-primary d-none d-sm-inline-block" data-bs-toggle="modal"
-                            data-bs-target="#modal-add">
-                            <!-- Download SVG icon from http://tabler-icons.io/i/plus -->
-                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
-                                viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
-                                stroke-linecap="round" stroke-linejoin="round">
-                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                <path d="M12 5l0 14" />
-                                <path d="M5 12l14 0" />
-                            </svg>
-                            اضافة جزء جديد
-                        </a>
+                        @can('اضافة الاجزاء المضافة')
+                            <a href="#" class="openModal btn btn-primary d-none d-sm-inline-block" data-bs-toggle="modal"
+                                data-bs-target="#modal-add">
+                                <!-- Download SVG icon from http://tabler-icons.io/i/plus -->
+                                <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
+                                    viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
+                                    stroke-linecap="round" stroke-linejoin="round">
+                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                    <path d="M12 5l0 14" />
+                                    <path d="M5 12l14 0" />
+                                </svg>
+                                اضافة جزء
+                            </a>
+                        @endcan
+
                         <a href="#" class="btn btn-primary d-sm-none btn-icon" data-bs-toggle="modal"
                             data-bs-target="#modal-add" aria-label="Create new report">
                             <!-- Download SVG icon from http://tabler-icons.io/i/plus -->
@@ -89,81 +94,128 @@
     </div>
 @endsection
 @section('content')
-    @if (Session::has("delete"))
-    
-    <div class="alert alert-important alert-warning alert-dismissible" role="alert">
-        <div class="d-flex">
-          <div>
-            <!-- Download SVG icon from http://tabler-icons.io/i/check -->
-            <svg xmlns="http://www.w3.org/2000/svg" class="icon alert-icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M5 12l5 5l10 -10"></path></svg>
-          </div>
-          <div>
-            {{Session::get('delete')}}
-          </div>
+    @if (Session::has('delete'))
+        <div class="alert alert-important alert-warning alert-dismissible" role="alert">
+            <div class="d-flex">
+                <div>
+                    <!-- Download SVG icon from http://tabler-icons.io/i/check -->
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon alert-icon" width="24" height="24"
+                        viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                        <path d="M5 12l5 5l10 -10"></path>
+                    </svg>
+                </div>
+                <div>
+                    {{ Session::get('delete') }}
+                </div>
+            </div>
+
         </div>
-        
-      </div>
-
     @endif
-      <table id="parts" class="table table-warning table-striped table-bordered" style="width:100%">
-        <thead>
-            <tr>
-                <th>الاجزاء</th>
-                <th>الملاحظات</th>
-                <th>المنهج</th>
-                <th>الاجراءت</th>
-            </tr>
-        </thead>
-        <tbody id="tbody">
-            @foreach ($Parts as $Item)
-                <tr>
-                    <td>{{ $Item->title }}</td>
-                    <td>{{ $Item->comment }}</td>
-                    <td><a href="{{ route('admin.almustawayat.almanhaj', [$Item->id, $Almustawaya->id]) }}"
-                            class="btn btn-info btn-sm">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-books"
-                                width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffffff"
-                                fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                <path d="M5 4m0 1a1 1 0 0 1 1 -1h2a1 1 0 0 1 1 1v14a1 1 0 0 1 -1 1h-2a1 1 0 0 1 -1 -1z" />
-                                <path d="M9 4m0 1a1 1 0 0 1 1 -1h2a1 1 0 0 1 1 1v14a1 1 0 0 1 -1 1h-2a1 1 0 0 1 -1 -1z" />
-                                <path d="M5 8h4" />
-                                <path d="M9 16h4" />
-                                <path
-                                    d="M13.803 4.56l2.184 -.53c.562 -.135 1.133 .19 1.282 .732l3.695 13.418a1.02 1.02 0 0 1 -.634 1.219l-.133 .041l-2.184 .53c-.562 .135 -1.133 -.19 -1.282 -.732l-3.695 -13.418a1.02 1.02 0 0 1 .634 -1.219l.133 -.041z" />
-                                <path d="M14 9l4 -1" />
-                                <path d="M16 16l3.923 -.98" />
-                            </svg>
-                            المنهج</a></td>
-                    <td>
-                        <form class="d-inline" action="{{ route('admin.almustawayat.destory.part', $Item->id) }}"
-                            onsubmit="return confirm('سوف تقوم بحذف العنصر')" method="POST">
-                            @csrf
-                            @method('DELETE')
-                            <a href="#" class="btn btn-indigo btn-sm update-btn"
-                                data-id="{{ $Item->id }}">تعديل</a>
-                            <button class="btn btn-pink btn-sm">حذف</button>
-                        </form>
+    <div class="table-responsive">
 
-                    </td>
+        <table id="parts" class="table table-warning  table-bordered" style="width:100%">
+            <thead>
+                <tr>
+                    <th>الاجزاء</th>
+                    <th>الملاحظات</th>
+                    <th>المنهج</th>
+                    <th>الاجراءت</th>
                 </tr>
-            @endforeach
-        </tbody>
-    </table>
+            </thead>
+            <tbody id="tbody">
+                @foreach ($Parts as $Item)
+                    <tr>
+                        <td class="update-link"
+                            data-route="{{ route('admin.almustawayat.almanhaj', [$Item->id, $Almustawaya->id]) }}">
+                            {{ $Item->title }}</td>
+                        <td>{{ $Item->comment }}</td>
+                        <td>
+                            @can('قائمة المنهج')
+                                @foreach ($Item->almanhajs as $value)
+                                    <span class=" badge bg-dark">{{ $value->title }}</span>
+                                @endforeach
+                                {{-- <a href="{{ route('admin.almustawayat.almanhaj', [$Item->id, $Almustawaya->id]) }}"
+                                class="btn btn-info btn-sm">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-books"
+                                    width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffffff"
+                                    fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                    <path d="M5 4m0 1a1 1 0 0 1 1 -1h2a1 1 0 0 1 1 1v14a1 1 0 0 1 -1 1h-2a1 1 0 0 1 -1 -1z" />
+                                    <path d="M9 4m0 1a1 1 0 0 1 1 -1h2a1 1 0 0 1 1 1v14a1 1 0 0 1 -1 1h-2a1 1 0 0 1 -1 -1z" />
+                                    <path d="M5 8h4" />
+                                    <path d="M9 16h4" />
+                                    <path
+                                        d="M13.803 4.56l2.184 -.53c.562 -.135 1.133 .19 1.282 .732l3.695 13.418a1.02 1.02 0 0 1 -.634 1.219l-.133 .041l-2.184 .53c-.562 .135 -1.133 -.19 -1.282 -.732l-3.695 -13.418a1.02 1.02 0 0 1 .634 -1.219l.133 -.041z" />
+                                    <path d="M14 9l4 -1" />
+                                    <path d="M16 16l3.923 -.98" />
+                                </svg>
+                                المنهج</a> --}}
+                            @endcan
+                        </td>
+                        <td>
+
+                            <div class="dropdown">
+                                <button class="btn btn-warning dropdown-toggle align-text-top" data-bs-toggle="dropdown"
+                                    aria-expanded="false">
+                                    الخيارات
+                                </button>
+                                <div class="dropdown-menu dropdown-menu-end" style="">
+
+                                    {{-- @can('تعديل الاجزاء المضافة')
+                                    <a class="fw-bold text-success dropdown-item" href="#">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-edit"
+                                            width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5"
+                                            stroke="#7bc62d" fill="none" stroke-linecap="round"
+                                            stroke-linejoin="round">
+                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                            <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" />
+                                            <path
+                                                d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z" />
+                                            <path d="M16 5l3 3" />
+                                        </svg>
+                                        تعديل
+                                    </a>
+                                @endcan --}}
+                                    @can('حذف الاجزاء المضافة')
+                                        <form class="dropdown-item d-inline" id="deletealmustawaya"
+                                            action="{{ route('admin.almustawayat.destory.part', $Item->id) }}"
+                                            onsubmit="return confirm('سوف تقوم بحذف العنصر')" method="POST">
+                                            @csrf
+                                            @method('DELETE')
+
+                                            <button style="border: none;background:none;width:100%;"
+                                                class="fw-bold text-danger px-0 py-1 text-end">
+                                                <svg xmlns="http://www.w3.org/2000/svg"
+                                                    class="icon icon-tabler icon-tabler-trash-off" width="44"
+                                                    height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ff4500"
+                                                    fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                    <path d="M3 3l18 18" />
+                                                    <path d="M4 7h3m4 0h9" />
+                                                    <path d="M10 11l0 6" />
+                                                    <path d="M14 14l0 3" />
+                                                    <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l.077 -.923" />
+                                                    <path d="M18.384 14.373l.616 -7.373" />
+                                                    <path d="M9 5v-1a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
+                                                </svg>
+                                                حذف</button>
+                                        </form>
+                                    @endcan
+
+
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
 @endsection
 @push('js')
     <script>
-        // 7:5 - 7:25 !! 7:30 - 7:50 
-        // 10:35   : 11:45
-        // 4:00  : 4:30
-        // 6 : 25  - 7:00
-        // 7:10 - 7:50
-        // 8:30 : 10:20
-        // 10:25 : 12:15
-        // 1:30 - 1:50
-        // Add New Input 
-
-
         $(".openModal ").click(function() {
             $("#AlmustawayaSubmit").html('ادخال جزء');
             $(".modal-title").html('ادخال الجزء');
@@ -207,11 +259,19 @@
             var inputTextarea = document.createElement('input');
             inputTextarea.className = 'form-control';
             inputTextarea.name = 'comment[]';
-            inputTextarea.rows = 2;
             inputTextarea.placeholder = 'الملاحظات';
+
+            var removeButton = document.createElement('button');
+            removeButton.type = 'button';
+            removeButton.className = 'btn btn-danger';
+            removeButton.innerText = 'إزالة';
+            removeButton.addEventListener('click', function() {
+                inputGroup.remove();
+            });
 
             inputGroup.appendChild(inputText);
             inputGroup.appendChild(inputTextarea);
+            inputGroup.appendChild(removeButton);
             form.appendChild(inputGroup);
         });
 

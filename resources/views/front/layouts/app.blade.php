@@ -1,246 +1,222 @@
 <!doctype html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 
 <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="icon" type="image/x-icon" href="{{asset('uploads/favicon/'.$Setting->favicon_site)}}">
 
-    <meta property="og:site_name" content="Maqraa">
-    <meta name="twitter:site" content="@Maqraa">
-    <meta property="og:url" content="https://ahlelquran.net/ar">
-    <link rel="canonical" href="https://ahlelquran.net/ar">
-    <meta id="token" name="csrf-token" content="MTf5PI5obMFfpX1aWkPZwr6oS0NTTZqsfQ6EgYo6">
-    <meta id="locale" name="locale" content="ar">
-    <meta name="title" content="home" />
-    <meta name="description" content="home" />
-    <title>منصة الداني</title>
-    <link rel="icon" href="https://ahlelquran.net/assets/images/logo/fav.png" type="image/x-icon">
-    <!-- styles CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.rtl.min.css" integrity="sha384-gXt9imSW0VcJVHezoNQsP+TNrjYXoGcrqBZJpry9zJt8PCQjobwmhMGaDHTASo9N" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <link media="all" type="text/css" rel="stylesheet" href="/front/css/main-style.css">
-    <link media="all" type="text/css" rel="stylesheet" href="/front/css/ahlquran.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+        integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.rtl.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@splidejs/splide@latest/dist/css/splide.min.css">
 
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Almarai:wght@300;400;700;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@200..1000&display=swap');
 
-        body,
-        h1,
-        h2,
-        h3,h4,h5 {
-            font-family: "Almarai", sans-serif !important;
+        body {
+
+            font-family: "Cairo", sans-serif;
+        }
+
+        .nav-link {
+            color: #fff;
+        }
+
+        .nav-link:hover {
+            color: #ffe083;
+        }
+
+        .navbar-nav .nav-link.active {
+            color: #ffe083 !important;
+            font-weight: bold;
         }
     </style>
-    @stack('css')
-
+    <link rel="stylesheet" href="/front/assetsFrontend/css/style.css">
+    <title>مـوقع الداني</title>
 </head>
 
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light" style="background-color: rgb(243 243 243)">
+        <div class="container-fluid">
+            <a class="navbar-brand ms-lg-auto" href="{{route("home.index")}}">
+                <img src="{{asset('uploads/logo/'.$Setting->logo_small)}}" alt="" width="50px">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
+                <ul class="navbar-nav mb-2 mb-lg-0">
+                    @foreach ($PageHeader as $header)
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" 
+                            href="{{route('home.page',$header->id)}}">
+                                {!! $header->icon !!}
+                                {{ $header->name }}
+                            </a>
+                        </li>
+                    @endforeach
+                 
+                </ul>
+            </div>
+            <!-- زر تسجيل الدخول يظهر فقط على الشاشات الكبيرة -->
+            @if (Auth::guard('admin')->check())
+                {{-- <button class="btn  rounded-3 d-none d-lg-block mx-2" style="background-color: #2e2e2e;color:#fff"
+                    type="button"> <i class="fa-solid fa-user"></i> {{ Auth::guard('admin')->user()->name }}</button> --}}
+                <a href="{{ route('admin.home') }}" target="_blank" class="btn text-white rounded-0" style="background: #000">
+                    <i class="fa-solid fa-gauge"></i> لوحة التحكم </a>
+                <form action="{{ route('admin.logout') }}" method="POST">
+                    @csrf
+                    <button type="submit" class="btn btn-primary rounded-0"><i
+                            class="fa-solid fa-right-from-bracket"></i></button>
+                </form>
+            @endif
+
+            @if (Auth::check() && !Auth::guard('admin')->check())
+                {{-- <button class="btn  rounded-3 d-none d-lg-block mx-2" style="background-color: #2e2e2e;color:#fff"
+                    type="button"> <i class="fa-solid fa-user"></i> {{ Auth::guard('admin')->user()->name }}</button> --}}
+                <a href="{{ route('almuhfazun.home') }}" target="_blank" class="btn text-white" style="background: #6f42c1">
+                    <i class="fa-solid fa-gauge"></i> لوحة التحكم </a>
+                <form action="{{ route('users.logout') }}" method="POST">
+                    @csrf
+                    <button type="submit" class="btn btn-danger"><i
+                            class="fa-solid fa-right-from-bracket"></i></button>
+                </form>
+            @endif
 
 
-<body class="rtl-mode default-theme">
-    <section id="wrapper">
-        <div id="notifications">
-            <header class="main-header">
-                <div class="container">
-                 @include('front.layouts.navbar')
-                    <div class="header-caption">
-                        <div class="row">
-                            <div class="col-lg-6 col-sm-6">
-                                <h1>أكبر تجمع قرآني على شبكة الإنترنت يجمع بين الطلاب ومعلمي القرآن حول العالم </h1>
-                                <p> يستطيع الطالب اختيار المعلم المناسب له والإنضمام إلى حلقاته كما يستطيع معلم القران
-                                    فتح حلقاته القرآنية بنفسه ليجتمع فيها مع طلابه </p>
-                                <a href="#register-as" class="btn btn-warning shadow-lg">اشترك الآن </a>
-                            </div>
-                            <div class="col-lg-6 col-sm-6">
-                                <div class="header-video">
-                                    <iframe width="560" height="315" src="https://www.youtube.com/embed/uV8Hogo9dCg"
-                                        frameborder="0"
-                                        allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-                                        allowfullscreen></iframe>
-                                </div>
-                            </div>
+        </div>
+    </nav>
+    <div class="banner">
+        <img src="{{asset('uploads/logo/'.$Setting->logo_big)}}" alt="">
+    </div>
+
+    @yield('content')
+
+    <div id="items">
+        <div class="container">
+            <div class="row text-right">
+                @foreach ($PageContainer as $page)
+                    <div class="col-md-6 my-2">
+                        <div class="item p-2">
+                            {!! $page->icon !!}
+                            <h5>
+                                <a href="{{route('home.page',$page->id)}}" class="text-white" >{{ $page->name }}</a>
+                            </h5>
+                           <p>
+                            {{ substr(strip_tags($page->content), 0, 101) }}...
+                           </p>
+
                         </div>
                     </div>
-                </div>
-            </header>
-            <div class="mobile-header">
-                <div class="content">
-                    <div class="mob-menu">
-                        <a data-toggle="modal" data-target="#sideModal" class="btn"><i class="fas fa-bars"></i> </a>
-                    </div>
-                    <div class="space"> </div>
-                    <div class="mob-logo">
-                        <a href="https://ahlelquran.net/ar">
-                            <img src="https://ahlelquran.net/assets/images/logo/white-logo.png"
-                                class="img-fluid mx-auto" alt="">
-                        </a>
-                    </div>
-                </div>
+                @endforeach
+
+
+
             </div>
         </div>
-        @yield('content')
-        <footer class="main-footer ">
-            <div class="top-footer">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-lg-5 col-md-4 col-sm-12">
-                            <div class="about text-center">
-                                <img src="https://ahlelquran.net/assets/images/logo/footer-logo-2.png"
-                                    class="img-responsive align-center" alt="logo">
-                                <p>أكبر تجمع قرآني على شبكة الإنترنت يجمع بين الطلاب ومعلمي القرآن حول العالم</p>
-                            </div>
-                        </div>
-                        <div class="col-lg-3 col-md-4 col-sm-12">
-                            <div class="footer-links">
-                                <ul class="list-unstyled no-margin">
-                                    <li><a href="https://support.utrujja.com/ar/category-list/ahl-quran"> الدعم
-                                            الفنى</a></li>
+    </div>  
 
-                                    <li><a href="https://ahlelquran.net/ar/join-as-instructor"> انضم كمعلم</a></li>
-                                    <li><a href="https://ahlelquran.net/ar/auth/register"> انضم كمتعلم</a></li>
+    <div class="containerMaps" style="background: #fff8e6">
 
-                                    <li><a href="https://ahlelquran.net/ar/privacy-policy"> سياسية الخصوصية</a></li>
-                                    <li><a href="https://ahlelquran.net/ar/terms-conditions"> الشروط والأحكام</a></li>
-                                    <li> <a href="#home-contact-us">اتصل بنا</a>
-                                    </li>
-
-
-
-
-                                </ul>
-                            </div>
-
-                        </div>
-                        <div class="col-lg-4 col-md-4 col-sm-12">
-                            <div class="mail-list">
-                                <h6> يمكنك متابعة كل جديد بالموقع بالاشتراك فى القائمة البريدية</h6>
-                                <form action="https://ahlelquran.net/ar/maillist/add/1" id="form" method="post"
-                                    role="search" data-parsley-validate>
-                                    <input type="hidden" name="_token" value="MTf5PI5obMFfpX1aWkPZwr6oS0NTTZqsfQ6EgYo6">
-                                    <div class="form-group ">
-                                        <input name="email" id="email" type="email" class="form-control"
-                                            placeholder="ادخل بريدك الالكتروني" required data-parsley-trigger='change'
-                                            data-parsley-required-message="أدخل بريدك الإلكتروني"
-                                            data-parsley-email-message="يجب عليك إدخال بريد إلكتروني صحيح"
-                                            data-parsley-errors-container="#parsly_error">
-
-                                        <button class="btn btn-block btn-info"><i
-                                                class="fas fa-paper-plane"></i></button>
-                                    </div>
-                                </form>
-
-
-                            </div>
-
-
-
-
-
-                            <a href="https://utrujja.com" target="_blank">
-                                <div class="media">
-                                    <div class="media-body text-center">
-                                        <img src="https://ahlelquran.net/assets/images/logo/white-logo2.png" alt="">
-                                        <p> تم التطوير بإستخدام نظام الأترجة لبناء المنصات التعليمية </p>
-                                    </div>
-                                </div>
-                            </a>
-
-                        </div>
-                    </div>
-
+   
+   <div class="container">
+    <div class="row">
+        <div class="col-12 my-4" id="maps">
+            <h3 class="text-center fw-bold" style="color:#605d56">الخريطة</h3>
+            {!! $Setting->maps !!}
+        </div>
+       </div>
+   </div>
+</div>
+    <div id="footerTop" class="text-center">
+        <h2 style="color: #64511a;"> <i class="fa-solid fa-magnifying-glass-chart"></i> احصائيات المركز </h2>
+        <div class="container">
+            <div class="row justify-content-center ">
+                <div class="col-md-3 item d-flex  flex-column justify-content-center">
+                    <span class="text-primary">ذكور</span>
+                    <hr />
+                    <span class="text-danger">اناث</span>
                 </div>
-            </div>
-            <div class="bottom-footer">
-                <div class="container">
-                    <div class="footer-content">
-                        <div class="social-icons">
-                            <h5 style="display:none">تابعنا</h5>
-                            <div class="social">
-                                <a href="https://www.youtube.com/watch?v=uV8Hogo9dCg" target="_blank"><img
-                                        src="https://ahlelquran.net/themes/midade/frontend/utrujja/assets/images/youtube-icon.svg"
-                                        alt="icon"></a>
-
-
-
-
-                            </div>
-
-                        </div>
-
-                        <div class="bottom-links">
-
-                        </div>
-                        <div class="copyrights">
-                            <p> جميع الحقوق محفوظة &copy; <a href="https://midade.com/" target="_blank">midade.com</a>
-                                <span>2024</span>
-                            </p>
-                        </div>
+                <div class="col-md-3 item d-flex  flex-column justify-content-center">
+                    <div>
+                        <span class="badge bg-primary">
+                            {{ \App\Models\Alhalaqat::where('type', 1)->count() }}
+                        </span>
+                        <hr style="margin: 5px 0" />
+                        <span class="badge bg-danger">
+                            {{ \App\Models\Alhalaqat::where('type', 0)->count() }}
+                        </span>
                     </div>
+                    <p class="mt-3">حلقة</p>
                 </div>
+                <div class="col-md-3 item">
+                    <div>
+                        <span class="badge bg-primary">
+                            {{ \App\Models\User::where('gender', 1)->count() }}
+                        </span>
+                        <hr style="margin: 5px 0" />
+                        <span class=" badge bg-danger">
+                            {{ \App\Models\User::where('gender', 0)->count() }}
+                        </span>
+                    </div>
+                    <p class="mt-3">محفظ</p>
+                </div>
+                <div class="col-md-3 item">
+                    <div>
+                        <span class="badge bg-primary">
+                            {{ \App\Models\Talib::where('gender', 1)->count() }}
+                        </span>
+                        <hr style="margin: 5px 0" />
+                        <span class=" badge bg-danger">
+                            {{ \App\Models\Talib::where('gender', 0)->count() }}
+                        </span>
+                    </div>
+                    <p class="mt-3">طالب</p>
+                </div>
+
             </div>
-        </footer>
+        </div>
+    </div>
 
 
+    <div id="footerBottom">
+        <div class="container text-center">
+            <div class="row d-flex  justify-content-between ">
+                <div class="col-md-4">
+                    <p>جميع الحقوق محفوظة لشركة 
+                        <a target="_blank" href="https://line-soft.com/">@linesoft</a>
+                    </p>
+                </div>
+                <div class="col-md-4">
+                    <ul>
+                        <a target="_blank" href="{{ $Setting->facebook_site }}"><i class="fa-brands fa-facebook"></i></a>
+                        <a target="_blank" href="{{ $Setting->twitter_site }}"> <i class="fa-brands fa-twitter"></i></a>
+                        <a target="_blank" href="{{ $Setting->youtube_site }}"><i class="fa-brands fa-youtube"></i></a>
+                        <a target="_blank"href="{{ $Setting->whatsapp }}"><i class="fa-brands fa-whatsapp"></i></a>
+                        <a target="_blank" href="{{ $Setting->instgram_site }}"><i class="fa-brands fa-instagram"></i></a>
+                    </ul>
+                </div>
+              
+            </div>
+        </div>
+    </div>
 
-    </section>
-    <script src="/front/js/app.js" type="text/javascript"></script>
-    <script src="/front/js/main-scripts.js" type="text/javascript"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@latest/dist/js/splide.min.js"></script>
+    <script>
+        var splide = new Splide('.splide', {
+            type: 'loop',
+            autoplay: 'true'
+        });
 
-
-
+        splide.mount();
+    </script>
 
 </body>
-
-<style>
-    .MomMove {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        height: 40px;
-        line-height: 39px;
-        z-index: 999999
-    }
-
-    @media screen and (max-width:480px) {
-        .MomMove {
-            line-height: 18px;
-        }
-    }
-
-    .ribbon-badge {
-        position: fixed;
-        top: 150px;
-        left: -70px;
-        background: #ffc107;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 10px;
-        z-index: 999;
-        -webkit-transform: rotate(270deg);
-        -moz-transform: rotate(270deg);
-        -o-transform: rotate(270deg);
-        -ms-transform: rotate(270deg);
-        transform: rotate(270deg);
-    }
-
-    .ribbon-badge span {
-        color: #000;
-    }
-
-    .ribbon-badge span i {
-        margin-left: 5px;
-    }
-
-    @media screen and (max-width:991px) {
-        .ribbon-badge {
-            top: 200px
-        }
-    }
-</style>
-
-@stack('js')
 
 </html>

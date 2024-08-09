@@ -62,6 +62,9 @@ class AuthenticatedSessionController extends Controller
     }
 
     public function update(Request $request,$id){
+      
+        $admin = Admin::findOrFail($id);
+
         $password = Hash::make($request->passwordHidden);
         $showPassword = $request->passwordHidden;
         if(isset($request->password))
@@ -69,16 +72,18 @@ class AuthenticatedSessionController extends Controller
             $password = Hash::make($request->password);
             $showPassword = $request->password;
         }
-        Admin::where('id',$id)->update([
+        $admin->update([
             'name' => $request->name,
             'email' => $request->email,
             'password' => $password,
             'phone' => $request->phone,
             'showPassword' => $showPassword,
             'gender' => $request->gender,
-            
+            'male_or_female' => $request->male_or_female
         ]);
-        return response()->json(['status'=>201,'type'=>'update']);
+        $admin->syncRoles($request->roles);
 
+        // return response()->json(['status'=>201,'type'=>'update']);
+        return redirect()->back()->with('success','تم تعديلات البيانات بنجاح');
     }
 }

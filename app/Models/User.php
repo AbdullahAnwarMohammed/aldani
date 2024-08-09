@@ -27,7 +27,6 @@ class User extends Authenticatable
         'cid',
         'date_of_birth',
         'photo',
-        'test'
     ];
 
     /**
@@ -60,5 +59,6 @@ class User extends Authenticatable
         return $this->hasMany(Alhalaqat::class);
     }
 
+  
    
 }

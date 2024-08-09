@@ -14,7 +14,9 @@ return new class extends Migration
         Schema::create('pages', function (Blueprint $table) {
             $table->id();
             $table->string("name");
+            $table->string("icon");
             $table->text("content");
+            $table->integer("location");
             $table->boolean("status")->default(1);
             $table->timestamps();
         });

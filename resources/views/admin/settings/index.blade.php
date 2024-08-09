@@ -117,6 +117,16 @@
                     @enderror
                 </div>
                 <div class="col-md-6">
+                    <label for="">واتساب</label>
+                    <input type="text" value="{{$Setting->whatsapp}}"  class="form-control" name="whatsapp">
+                    @error('whatsapp')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12">
                     <label for="">آنستجرام</label>
                     <input type="text" value="{{$Setting->instgram_site}}"  class="form-control" name="instgram_site">
                     @error('instgram_site')
@@ -128,7 +138,7 @@
             <div class="row">
                 <div class="col-md-6">
                     <label for="">الخريطة</label>
-                    <textarea name="maps" value="{{$Setting->maps}}" class="form-control"  col-md-6s="30" rows="10"></textarea>
+                    <textarea name="maps" class="form-control"  col-md-6s="30" rows="10">{{$Setting->maps}}</textarea>
                 </div>
                 <div class="col-md-6">
                     <label for="">رسالة اغلاق الموقع</label>
@@ -139,11 +149,14 @@
                 <div class="col">
                     <label for="">الشعار الاكبر</label>
                     <input type="hidden" name="logo_big_value" value="{{$Setting->logo_big}}" >
-
                     <input type="file" accept="image/*" class="form-control" value="{{$Setting->logo_big}}" name="logo_big">
                     @error('logo_site')
                         <div class="text-danger">{{ $message }}</div>
                     @enderror
+                    @if ($Setting->logo_big)
+                    <img src="{{asset('uploads/logo/'.$Setting->logo_big)}}" class="image-thumbnail" width="150" alt="">
+                    @endif
+
                 </div>
             </div>
             <div class="row">
@@ -155,6 +168,9 @@
                     @error('logo_site')
                         <div class="text-danger">{{ $message }}</div>
                     @enderror
+                    @if ($Setting->logo_small)
+                    <img src="{{asset('uploads/logo/'.$Setting->logo_small)}}" class="image-thumbnail" width="150" alt="">
+                    @endif
                 </div>
                 <div class="col-md-6">
                     <label for="">الايقون</label>
@@ -164,6 +180,9 @@
                     @error('favicon_site')
                         <div class="text-danger">{{ $message }}</div>
                     @enderror
+                    @if ($Setting->favicon_site)
+                    <img src="{{asset('uploads/favicon/'.$Setting->favicon_site)}}" class="image-thumbnail" width="150" alt="">
+                    @endif
                 </div>
             </div>
             <div class="row my-2">
@@ -175,17 +194,19 @@
                     </select>
                 </div>
                 <div class="col-md-6">
-                    <label for="">دخول الحافظون</label>
+                    <label for="">دخول المحفظون</label>
                     <select name="login_almuhfazin" class="form-control">
                         <option value="1" @selected($Setting->login_almuhfazin == 1) >يعمل</option>
                         <option value="0" @selected($Setting->login_almuhfazin == 0) >لا يعمل</option>
                     </select>
                 </div>
             </div>
-
+            @can('تعديل الاعدادت')
             <div class="form-group">
-                <input type="submit" class="btn btn-dark" value="تعديل">
+                <input type="submit" class="btn btn-teal" value="حفظ">
             </div>
+            @endcan
+           
         </form>
 
     </div>

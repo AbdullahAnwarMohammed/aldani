@@ -88,7 +88,9 @@
                 <div class="row my-4">
                     <div class="col">
                         <label for="">الجنس</label>
-                        <select name="gender" class="form-control">
+                        <select name="gender" id="gender" class="form-control">
+                            <option value="" selected disabled>اختر الجنس</option>
+
                             <option value="1">ذكر</option>
                             <option value="0">انثي</option>
                         </select>
@@ -140,11 +142,10 @@
                     
                     <div class="col">
                         <label for="">الحلقة</label>
-                        <select name="alhalaqat_id"  class="form-control">
-                            <option value="" selected>فارغ</option>
-                            @foreach ($Alhalaqats as $Item)
+                        <select name="alhalaqat_id" id="alhalaqat_id" required  class="form-control">
+                            {{-- @foreach ($Alhalaqats as $Item)
                                 <option value="{{ $Item->id }}"  {{ old('alhalaqat_id') == $Item->id ? 'selected' : '' }}>{{ $Item->name }}</option>
-                            @endforeach
+                            @endforeach --}}
                         </select>
                     </div>
                     <div class="col">
@@ -231,6 +232,32 @@
 
 @push('js')
     <script>
+
+        $('#gender').change(function() {
+            var gender = $(this).val();
+
+            $.ajax({
+                url: '{{ route('admin.talibs.by.alhalaqa') }}', // URL to your Laravel route
+                type: 'GET',
+                data: {
+                    gender: gender
+                },
+                success: function(response) {
+                    $('#alhalaqat_id').empty();
+                    $.each(response.alhaqa, function(key, alhaqa) {
+                        $('#alhalaqat_id').append('<option value="' + alhaqa.id + '">' + alhaqa.name +
+                            '</option>');
+                    });
+                },
+                error: function(xhr) {
+                    console.log('An error occurred: ' + xhr.status + ' ' + xhr.statusText);
+                }
+            });
+        });
+
+
+
+
         $("#checkbox").on("change", function() {
             if (this.checked) {
                 $(this).next().html("مدفوعة")

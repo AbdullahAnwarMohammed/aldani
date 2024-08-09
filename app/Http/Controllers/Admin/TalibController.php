@@ -2,14 +2,17 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Exports\TalibExport;
 use App\Http\Controllers\Controller;
 use App\Models\Alhalaqat;
 use App\Models\Almustawayat;
 use App\Models\Subscrption;
 use App\Models\Talib;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
+use Maatwebsite\Excel\Facades\Excel;
 
 class TalibController extends Controller
 {
@@ -18,7 +21,8 @@ class TalibController extends Controller
      */
     public function index()
     {
-        $Talibs = Talib::get();
+        
+        $Talibs = Talib::whereIn('gender',maleOrFemaleForAdmin())->get();
 
         return view("admin.talibs.index", compact('Talibs'));
     }
@@ -39,6 +43,8 @@ class TalibController extends Controller
      */
     public function store(Request $request)
     {
+        $now = Carbon::now();
+
         $subscrption = $request->subscrption == "on" ? 1 : 0;
 
 
@@ -92,6 +98,8 @@ class TalibController extends Controller
                 'talib_id' => $Talib->id,
                 'subscrption_id' => $Subscrption->id,
                 'paid_value' => $request->paid_value,
+                'created_at' => $now,
+                'updated_at' =>  $now,
             ]);
         }
 
@@ -220,4 +228,12 @@ class TalibController extends Controller
         $Talib = Talib::where('id',$id)->first();
         return view("admin.talibs.details",compact('Talib'));
     }
+
+    // تصدير excel 
+    public function export()
+    {
+        return Excel::download(new TalibExport, 'talibs.xlsx');
+
+    }
+     
 }

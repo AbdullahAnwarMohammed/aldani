@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
+use Spatie\Permission\Models\Role;
 
 class RegisteredUserController extends Controller
 {
@@ -20,7 +21,24 @@ class RegisteredUserController extends Controller
      */
     public function create(): View
     {
-        return view('auth.register');
+        $roles = Role::pluck('name', 'name')->all();
+
+        return view('admin.mangers.create', compact('roles'));
+    }
+
+
+    public function edit($id): View
+    {
+        $admin = Admin::where('id', $id)->first();
+
+
+        $roles = Role::pluck('name', 'name')->all();
+        $userRoles = $admin->roles->pluck('name', 'name')->all();
+        return view('admin.mangers.edit', [
+            'roles' => $roles,
+            'userRoles' => $userRoles,
+            'admin' => $admin
+        ]);
     }
 
     /**
@@ -32,10 +50,12 @@ class RegisteredUserController extends Controller
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.Admin::class],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . Admin::class],
             // 'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'password' => ['required'],
             'phone' => ['numeric'],
+            'roles' => 'required'
+            
             // 'cid' => ['required|unique:users,cid|digits:12|numeric']
 
         ]);
@@ -47,8 +67,12 @@ class RegisteredUserController extends Controller
             'phone' => $request->phone,
             'showPassword' => $request->password,
             'gender' => $request->gender,
-            'cid' => $request->cid
+            'cid' => $request->cid,
+            'male_or_female' =>$request->male_or_female
         ]);
+
+
+        $admin->syncRoles($request->roles);
 
         event(new Registered($admin));
 
@@ -56,6 +80,5 @@ class RegisteredUserController extends Controller
 
         // return redirect(RouteServiceProvider::ADMIN);
         return response()->json(['status' => 201]);
-
     }
 }

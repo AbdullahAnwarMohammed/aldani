@@ -13,6 +13,10 @@ use NunoMaduro\Collision\Adapters\Phpunit\Subscribers\Subscriber;
 
 class SubscrptionController extends Controller
 {
+    public function __construct()
+    {
+        $this-> middleware('permission:قائمة الاشتراكات', ['only' => ['index']]);
+    }
     public function index()
     {
         $Subscrptions = Talib::where('subscrption',1)->get();
@@ -30,7 +34,6 @@ class SubscrptionController extends Controller
     // دفع فاتورة
     public function store(Request $request)
     {
-        
         $now = Carbon::now();
 
         $request->validate([
@@ -40,9 +43,10 @@ class SubscrptionController extends Controller
         $required_value = Subscrption::where('id',$request->subscrption_id)->first();
         
         $Tailb = Talib::where('id',$request->talib_id)->first();
-        if($required_value->required_value < ($Tailb->get_total_count_paid() + $request->paid_value))
+    
+        if($required_value->required_value < ($Tailb->get_singal_total_count_paid($required_value->id) + $request->paid_value))
         {
-            return redirect()->back()->with('error','القيمة المطلوب سدادها '. $required_value->required_value  - $Tailb->get_total_count_paid() );
+            return redirect()->back()->with('error','القيمة المطلوب سدادها '. $required_value->required_value  - $Tailb->get_singal_total_count_paid($required_value->id) );
         }else{
             DB::table('payments')->insert([
                 'talib_id' => $request->talib_id,
@@ -51,7 +55,8 @@ class SubscrptionController extends Controller
                 'created_at' => $now,
                 'updated_at' =>  $now,
             ]);
-            return redirect()->route("admin.subscrption.invoice",[$request->talib_id,$request->subscrption_id]);
+            return redirect()->route("admin.subscrption.invoice",[$request->talib_id,$request->subscrption_id])
+            ->with('print','true');
         }
     }
 
@@ -61,7 +66,7 @@ class SubscrptionController extends Controller
         return view("admin.subscrptions.single",compact('Talib'));
     }
 
-    public function invoice($id,$idInvoice)
+    public function invoice($idInvoice)
     {
         $Subscrption = Subscrption::where('id',$idInvoice)->first();
         
@@ -82,7 +87,7 @@ class SubscrptionController extends Controller
 
     public function addSubscrption($id)
     {
-        $Talib = Talib::find($id)->first();
+        $Talib = Talib::where('id',$id)->first();
 
         return view("admin.subscrptions.new",compact('Talib'));
     }
@@ -115,11 +120,14 @@ class SubscrptionController extends Controller
             'reg_end' => $request->reg_end,
             'required_value' => $request->required_value,
         ]);
+        $now = Carbon::now();
 
         DB::table('payments')->insert([
             'talib_id' => $request->talib_id,
             'subscrption_id' => $Subscrption->id,
             'paid_value' => $request->paid_value,
+            'created_at' => $now,
+            'updated_at' =>  $now,
         ]);
 
         return redirect()->back()->with('success','تم الاشتراك بنجاح');
@@ -219,5 +227,29 @@ class SubscrptionController extends Controller
        return redirect()->back()->with('success','تم التعديل بنجاح');;
 
         
+    }
+
+
+    public function paymentsAjax(Request $request)
+    {
+       $id_subscrption =  $request->id;
+
+
+   
+        $required_value = Subscrption::where('id',$id_subscrption)->first();
+        
+         $Tailb = Talib::where('id',$required_value->talib_id)->first();
+        
+         return response()->json([
+            'required_value' => $required_value->required_value,
+            'paid' => $Tailb->get_singal_total_count_paid($required_value->id),
+            'total' => $required_value->required_value - $Tailb->get_singal_total_count_paid($required_value->id)
+         ]);
+
+        // if($required_value->required_value < ($Tailb->get_singal_total_count_paid($required_value->id) + $request->paid_value))
+        // {
+        //     return redirect()->back()->with('error','القيمة المطلوب سدادها '. $required_value->required_value  - $Tailb->get_singal_total_count_paid($required_value->id) );
+      
+
     }
 }

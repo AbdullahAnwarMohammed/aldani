@@ -16,6 +16,8 @@ return new class extends Migration
             $table->string("name");
             $table->string("descrption")->nullable();
             $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete();
+            $table->string("room_url")->nullable();
+            $table->boolean("type");    
             // $table->foreignId('subdivision_id')->nullable()->constrained()->nullOnDelete();
             $table->timestamps();
         });

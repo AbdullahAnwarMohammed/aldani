@@ -30,10 +30,23 @@ use Illuminate\Support\Facades\Route;
 // });
 
 
-Route::group(['as' => 'home.'],function(){
-    Route::get("/",[HomeController::class,'index'])->name("index");
+Route::group(['as' => 'home.'], function () {
+    Route::get("/", [HomeController::class, 'index'])->name("index");
     // عرض الصفحات
-    Route::get("/page/{id}",[HomeController::class,'getPage'])->name("pages.show");
+    Route::get("/page/{id}", [HomeController::class, 'getPage'])->name("pages.show");
+
+    // تسجيل الدخول
+    Route::post("/login/AdminOrUser", [HomeController::class, 'AdminOrUser'])->name("AdminOrUser");
+
+
+    // محتوي الصفحة
+    Route::get("/page/{id}", [HomeController::class, 'page'])->name("page");
+
+    // البحث عن طالب
+    Route::post("/talib/search", [HomeController::class, 'search'])->name("talib.search");
+
+
+    // ولي الامر
+    Route::get("/parent/{cid}",[HomeController::class,'parentPage'])->name("parent.home");
+    Route::get("/parent/alaikhtibarat/{cid}",[HomeController::class,'parentAlaikhtibarat'])->name("parent.alaikhtibarat");
 });
-
-

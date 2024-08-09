@@ -20,8 +20,6 @@ class AlhalaqatController extends Controller
         }
         
         return redirect()->back();
-
-        
     }
 
     public function update(Request $request)

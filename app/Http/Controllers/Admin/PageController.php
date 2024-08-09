@@ -14,7 +14,7 @@ class PageController extends Controller
     public function index()
     {
         $Pages = Page::all();
-        return view("admin.pages.index",compact('Pages'));
+        return view("admin.pages.index", compact('Pages'));
     }
 
     /**
@@ -23,7 +23,6 @@ class PageController extends Controller
     public function create()
     {
         return view("admin.pages.create");
-
     }
 
     /**
@@ -41,10 +40,12 @@ class PageController extends Controller
         Page::create([
             'name' => $request->name,
             'content' => $request->content,
+            'icon' => $request->icon,
+            'location' => $request->location,
             'status' => $status,
         ]);
-        
-        return redirect()->back()->with('success','تم انشاء الصفحة بنجاح');
+
+        return redirect()->back()->with('success', 'تم انشاء الصفحة بنجاح');
     }
 
     /**
@@ -60,9 +61,9 @@ class PageController extends Controller
      */
     public function edit(string $id)
     {
-        $Page = Page::where('id',$id)->first();
+        $Page = Page::where('id', $id)->first();
 
-        return view("admin.pages.edit",compact('Page'));
+        return view("admin.pages.edit", compact('Page'));
     }
 
     /**
@@ -71,16 +72,16 @@ class PageController extends Controller
     public function update(Request $request, string $id)
     {
         $request->validate([
-            'name' => 'required|unique:pages,name,'.$id,
+            'name' => 'required|unique:pages,name,' . $id,
             'content' => 'required'
         ]);
-        Page::where('id',$id)->update([
+        Page::where('id', $id)->update([
             'name' => $request->name,
+            'icon' => $request->icon,
+            'location' => $request->location,
             'content' => $request->content
         ]);
-        return redirect()->back()->with('success','تم التعديل بنجاح');
-
-
+        return redirect()->back()->with('success', 'تم التعديل بنجاح');
     }
 
     /**
@@ -88,7 +89,7 @@ class PageController extends Controller
      */
     public function destroy(string $id)
     {
-        Page::where('id',$id)->delete();
-        return redirect()->back()->with('delete','تم الحذف بنجاح');
+        Page::where('id', $id)->delete();
+        return redirect()->back()->with('delete', 'تم الحذف بنجاح');
     }
 }

@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string("phone")->nullable();
             $table->string("showPassword");
             $table->boolean("gender");
+            $table->string("male_or_female",30);
             $table->rememberToken();
             $table->timestamps();
         });

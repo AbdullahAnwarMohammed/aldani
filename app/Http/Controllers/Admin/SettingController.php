@@ -12,8 +12,18 @@ use Illuminate\Support\Facades\File;
 
 class SettingController extends Controller
 {
+  public function __construct()
+  {
+    $this-> middleware('permission:عرض الاعدادت', ['only' => ['index']]);
+    // $this->middleware('permission:create role', ['only' => ['create','store','addPermissionToRole','givePermissionToRole']]);
+     $this->middleware('permission:تعديل الاعدادت', ['only' => ['update']]);
+    // $this->middleware('permission:delete role', ['only' => ['destroy']]);
+  }
   public function index()
   {
+
+  
+
     $Sessions = Session::all();
 
     return view("admin.settings.index",compact('Sessions'));
@@ -43,7 +53,7 @@ class SettingController extends Controller
 
       $logo_small_value_name = time() . '.' . $request->logo_small->getClientOriginalExtension();
       $request->logo_small->move(public_path('uploads/logo'), $logo_small_value_name);
-    }
+    } 
 
     if (isset($request->logo_big)) {
       if (File::exists(public_path('uploads/logo/' . $logo_big_value_name))) {
@@ -78,6 +88,7 @@ class SettingController extends Controller
       'twitter_site' => $request->twitter_site,
       'youtube_site' => $request->youtube_site,
       'instgram_site' => $request->instgram_site,
+      'whatsapp' => $request->whatsapp,
       'address' => $request->address,
       'maps' => $request->maps,
       'message_close_site' => $request->message_close_site,
@@ -87,63 +98,12 @@ class SettingController extends Controller
     return redirect()->back()->with('success', 'تم التعديل بنجاح');
   }
 
-  public function exportDatabase()
-  {
-   // Run the db:export command
-  //  Artisan::call('db:export');
-
-  //  $output = Artisan::output();
-
-  //  return redirect()->back()->with('success', 'تم تصدير الملف بنجاح');
-
-
-    // Run the db:export command
-    $host = config('database.connections.mysql.host');
-    $username = config('database.connections.mysql.username');
-    $password = config('database.connections.mysql.password');
-    $database = config('database.connections.mysql.database');
  
-    $outputFile = storage_path('/app/database/database_dump_'.date("Y-m-d").'.sql');
- 
-    // Build the mysqldump command
-    $command = "mysqldump --host={$host} --user={$username} --password={$password} {$database} > {$outputFile}";
- 
-    // Execute the command
-    exec($command, $output, $returnValue);
- 
-    // Check the command execution result
-    if ($returnValue !== 0) {
-        return response()->json(['error' => "Database export failed: " . implode("\n", $output)], 500);
-    }
- 
-    // return response()->download($outputFile)->deleteFileAfterSend(true);
-   return response()->download($outputFile);
-    
-  }
-
 
   public function createDatabase()
   {
     return view("admin.settings.create_database");
   }
 
-  public function storeDatabase(Request $request)
-  {
-    $file = $request->file('sql_file'); // Assuming file input name is 'sql_file'
 
-    if ($file) {
-        $filePath = $file->getRealPath();
-
-        // Read SQL statements from the file
-        $sql = file_get_contents($filePath);
-
-        // Execute SQL statements
-        DB::unprepared($sql);
-
-        return redirect()->back()->with('success', 'Database imported successfully!');
-    }
-
-    return redirect()->back()->withErrors(['error', 'Error: File not found or empty.']);
-
-  }
 }

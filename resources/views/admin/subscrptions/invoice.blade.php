@@ -38,9 +38,9 @@
                         <div class="col-6">
                             <p class="h3">موقع الداني</p>
                             <address>
-                                المكان : <br>
-                                المحافظة : <br>
-                                البريد :
+                                البريد : {{ $Setting->email_site }}<br>
+                                الهاتف : {{ $Setting->phone }}<br>
+                                العنوان : {{ $Setting->address }}<br>
                             </address>
                         </div>
                         <div class="col-6 text-end">
@@ -80,13 +80,15 @@
 
                             <tr>
                                 <td colspan="2" class="strong text-end">المجموع</td>
-                                <td class="text-end">{{ $Subscrption->subscrption->get_singal_total_count_paid($Subscrption->id) }}</td>
+                                <td class="text-end">
+                                    {{ $Subscrption->subscrption->get_singal_total_count_paid($Subscrption->id) }}</td>
                             </tr>
 
                             <tr>
                                 <td colspan="2" class="strong text-end">متبقي</td>
                                 <td class="text-end">
-                                    {{ $Subscrption->required_value - $Subscrption->subscrption->get_singal_total_count_paid($Subscrption->id) }}</td>
+                                    {{ $Subscrption->required_value - $Subscrption->subscrption->get_singal_total_count_paid($Subscrption->id) }}
+                                </td>
                             </tr>
 
 
@@ -100,15 +102,20 @@
             </div>
         </div>
     </div>
+    @if (Session::has('print'))
+        <input type="hidden" id="check" value="{{ Session::get('print') }}" />
+    @endif
 @endsection
 @push('js')
     <script>
-        Swal.fire({
-  position: "top-start",
-  icon: "success",
-  title: "تم الدفع بنجاح",
-  showConfirmButton: false,
-  timer: 1500
-});
+        if ($("#check").val() == 'true') {
+            Swal.fire({
+                position: "top-start",
+                icon: "success",
+                title: "تم الدفع بنجاح",
+                showConfirmButton: false,
+                timer: 1500
+            });
+        }
     </script>
 @endpush

@@ -17,31 +17,29 @@
                     <div class="btn-list">
 
 
-                        <a href="{{ route('admin.pages.create') }}" class=" btn btn-primary d-none d-sm-inline-block"
-                
-                        >
-                            <!-- Download SVG icon from http://tabler-icons.io/i/plus -->
-                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
-                                viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
-                                stroke-linecap="round" stroke-linejoin="round">
-                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                <path d="M12 5l0 14" />
-                                <path d="M5 12l14 0" />
-                            </svg>
-                            انشاء صفحة
-                        </a>
-                        <a href="{{ route('admin.pages.create') }}" class="btn btn-primary d-sm-none btn-icon"
-                    
-                        >
-                            <!-- Download SVG icon from http://tabler-icons.io/i/plus -->
-                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
-                                viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
-                                stroke-linecap="round" stroke-linejoin="round">
-                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                <path d="M12 5l0 14" />
-                                <path d="M5 12l14 0" />
-                            </svg>
-                        </a>
+                     @can('اضافة صفحة')
+                     <a href="{{ route('admin.pages.create') }}" class=" btn btn-primary d-none d-sm-inline-block">
+                        <!-- Download SVG icon from http://tabler-icons.io/i/plus -->
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
+                            viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                            <path d="M12 5l0 14" />
+                            <path d="M5 12l14 0" />
+                        </svg>
+                        انشاء صفحة
+                    </a>
+                    <a href="{{ route('admin.pages.create') }}" class="btn btn-primary d-sm-none btn-icon">
+                        <!-- Download SVG icon from http://tabler-icons.io/i/plus -->
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
+                            viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                            <path d="M12 5l0 14" />
+                            <path d="M5 12l14 0" />
+                        </svg>
+                    </a>
+                     @endcan
 
 
                     </div>
@@ -65,6 +63,7 @@
             <tr>
                 <th>#</th>
                 <th>اسم الصفحة</th>
+                <th>الظهور</th>
                 <th>الحالة</th>
                 <th>الاجراءت</th>
             </tr>
@@ -77,6 +76,7 @@
             <tr>
                 <td>{{$i++}}</td>
                 <td>{{$Item->name}}</td>
+                <td>{{$Item->location == 1 ? "Header" : "Container"}}</td>
                 <td>
                     @if ($Item->status == 1)
                         <span class="badge bg-success">تعمل</span>

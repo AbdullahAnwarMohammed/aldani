@@ -28,6 +28,7 @@
             <span>العام الدراسي : {{ $Setting->year }} || {{ $Setting->year + 1 }}</span>
             <span>الترم : {{ $Setting->session->name }}</span>
         </div>
+
         <input type="date" style="background:#fd7e14;color:#2e1805;font-weight:bold;width:50%;margin:auto"
             class="form-control" id="date" value="{{ date('Y-m-d') }}">
 
@@ -73,45 +74,16 @@
                 <!--                                     <button style="padding: 0;background:#ffd400"                   class="btn btn-sm  mychose fw-bold" data-bs-toggle="modal" data-bs-target="#exampleModa2"> <i class="ri-file-add-line"></i> المضامين</button>              -->
                 <!-- <a href="madmenHome.php?username=mandani&id=2" target="_blank"  style="padding: 0;background:#ffd400">المضامين</a> -->
             </h4>
-            <div id="showMamen" class="d-none dropdown">
-                <div class="selectMadmen"> <select
-                        style="font-size: 16px; background: rgb(255, 212, 0); border-radius: 5px;" id="GenderHome">
-                        <option value="" selected disabled>الجنس</option>
-                        <option value="all">الكل</option>
-                        <option value="1">ذكور</option>
-                        <option value="2">اناث</option>
-                    </select> <select style="font-size: 16px; background: rgb(255, 212, 0); border-radius: 5px;"
-                        id="committee">
-                        <option value="" selected disabled>اللجان</option>
-                        <option value="all">الكل</option>
-                        <option value=5>5</option>
-                        <option value=2>2</option>
-                        <option value=3>3</option>
-                        <option value=1>1</option>
-                        <option>1</option>
-                    </select> </div>
-                <table class="table getTableMadmen  table-secondary table-striped" style="width:100%;">
-                    <thead>
-                        <tr>
-                            <th> <input type="checkbox" data-target=".mainCheckbox" class="checkall checkallMadmen" /> <span
-                                    class="getNumberMadmen2" style="position: absolute;right: 60px;"></span> </th>
-                            <th class="name2 " style="text-align: right;">اسماء المضامين</th>
-                            <th> العائلة</th>
-                            <th> <span class="getNumberAttend"></span> <span class="textAttend">حضور</span> </th>
-                        </tr>
-                    </thead>
-                    <tbody> </tbody>
-                </table>
-                <div class="insertList "> <select name="" style="padding: 8px 0;" id="valueList2"
-                        class="form-control  rounded-0"> </select> <button id="insetListContent"
-                        class="voteButtonMain py-2 rounded-0">تطبيق</button> </div>
-            </div>
+
             <div class="dropdown active" id="showVoters">
                 <div class="table-responsive">
-                    {{-- <select class="searchname">
-                    <option value="1">بحث عام</option>
-                    <option value="0">بحث مخصص</option>
-                </select> --}}
+                    <a href="#" target="_blank" id="url_Room" class="d-none btn btn-primary btn-sm fw-bold "
+                        style="    position: absolute;
+    left: 14px;
+    top: 4px;
+    z-index:99999" class="d-block">غرفة
+                        التسميع</a>
+
                     <table id="getAllStudents" class="table table-secondary table-striped " style="width:100%">
                         <thead>
                             {{-- <tr>
@@ -123,7 +95,10 @@
                         </tr> --}}
                             <tr>
                                 <th>#</th>
+                                <th></th>
                                 <th>اسم الحافظ/ة</th>
+                                <th></th>
+
                                 <th>الدرجة</th>
                                 <th>المستوي</th>
                                 <th>الهاتف</th>
@@ -132,43 +107,79 @@
 
                     </table>
                 </div>
-
+                <div class="insertList ">
+                    <select style="padding: 8px 0;" id="valueList" class="form-control  rounded-0">
+                        <option value="">المجموعات</option>
+                        @foreach ($Groups as $item)
+                            <option value="<?= $item->id ?>"><?= $item->name ?></option>
+                        @endforeach
+                    </select>
+                    <button id="insetListContent" class="insertBtnMain py-2 rounded-0">تطبيق</button>
+                </div>
             </div>
             <div class="countVoters">
+                <div class="col-12">
+
+
+                    @if (Session::has('delete-group'))
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            {{ Session::get('delete-group') }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    @endif
+                </div>
                 <h5 class="titlelist openDropdown "> <span class="text-white"><span class="badge bg-light text-dark">
-                            80 </span> الغرف </span> </h5>
+                            {{ count($Groups) }} </span> المجموعات </span> </h5>
                 <div class="dropdown" style="width: 100%; display: none;">
                     <table style="margin: 0;" class="table table-warning table-bordered tablelist">
                         <thead>
                             <tr>
                                 <th> <span class="badge text-warning text-center"
                                         style="width:100%;text-align:left;font-size:15px;font-weight:bold;">
-                                        80 </span> </th>
-                                <th class="name text-center">رقم الغرفة</th>
+                                    </span> </th>
+                                <th class="name text-center">الاسم</th>
                                 <th>العدد</th>
-                                <th style="padding:0 10px; text-align: center;">النوع</th>
+                                <th style="padding:0 10px; text-align: center;">الاجراءت</th>
                             </tr>
                         </thead>
-
-                    </table> <button style="float:left;                                         width:100%"
-                        class="btndeletelist">حذف <i class="ri-delete-bin-5-fill"></i></button>
+                        <tbody>
+                            @php
+                                $i = 1;
+                            @endphp
+                            @foreach ($Groups as $item)
+                                <tr>
+                                    <td>{{ $i++ }}</td>
+                                    <td data-id="{{ $item->id }}" class="open-group" data-bs-toggle="modal"
+                                        data-name = "{{ $item->name }}" data-bs-target="#modalStudent">
+                                        {{ $item->name }}</td>
+                                    <td>{{ $item->count_of_talibs() }}</td>
+                                    <td>
+                                        <form action="{{ route('almuhfazun.group.delete', $item->id) }}"
+                                            onsubmit="return confirm('سوف تقوم بالحذف ؟ ')" method="POST">
+                                            @csrf
+                                            {{-- <a href="#" class="text-danger">حذف</a> --}}
+                                            <button class="btn btn-sm btn-danger">حذف</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                    <button style="float:left;width:100%" class="btndeletelist">حذف <i
+                            class="ri-delete-bin-5-fill"></i></button>
                 </div>
             </div>
         </div>
-        <div class="createListNames">
+        <div class="createListNames py-4">
             <div class="parent">
-                <h3 class="openDropdown text-center">مجموعة</h3>
+                <h3 class="openDropdown text-center">انشاء مجموعة</h3>
                 <div class="dropdown active">
-                    <form id="createroom"> <input type="hidden" name="createroom"> <input type="hidden"
-                            name="id_event" value="3"> <input type="text" id="name" required
-                            name="room_number" placeholder="اكتب اسم الغرفة"> <select name="room_type">
-                            <option value="1">احادي</option>
-                            <option value="2">ثنائي</option>
-                            <option value="3">ثلاثي</option>
-                            <option value="4">رباعي</option>
-                            <option value="5">خماسي</option>
-                            <option value="6">سداسي</option>
-                        </select> <button type="submit" class="click width-100">انشاء</button> </form>
+                    <form id="createroom">
+
+                        <input type="text" id="name" required class="room_name" name="room_name"
+                            placeholder="اسم المجموعة">
+                        <button type="submit" class="click width-100">انشاء</button>
+                    </form>
                 </div>
             </div>
         </div>
@@ -177,6 +188,71 @@
 @endsection
 @push('js')
     <script>
+        // فتح الجروب
+        $(".open-group").on("click", function() {
+            let id = $(this).data("id");
+            let name = $(this).data("name");
+            $.ajax({
+                url: "{{ route('almuhfazun.group.open') }}",
+                method: "POST",
+                data: {
+                    id: id
+                },
+                success: function(data) {
+                    $('.modal-body').empty();
+                    if (data == 'empty') {
+                        
+                        $('.modal-body').html(`
+                        <div class="alert alert-warning">لا يوجد طلاب</div>
+                        `);
+
+                    } else {
+                        let info = `
+                        <h4>مجموعة ${name}</h4>
+                    <table class="table">
+                        <tr>
+                            <th>الاسم</th>
+                            <th>الاجراءت</th>
+                            </tr>
+                    `
+                        $.each(data, function(key, value) {
+                            info += `
+                        <tr>
+                            <td>${value.name}</td>
+                            <td class="text-center delete-person-from-group" data-id=${id} data-talib=${value.id}><a href="#" class="btn btn-sm btn-danger">حذف</a></td>
+                            </tr>
+                        `
+                        });
+                        $('.modal-body').html(info);
+                    }
+
+                }
+            });
+        })
+
+        $(document).on("click", ".delete-person-from-group", function() {
+            let id_talib = $(this).data("talib");
+            let id_group = $(this).data("id");
+            let parent = $(this).parent();
+
+            let confirmation = confirm('سوف تقوم بعملية الحذف');
+            if (confirmation) {
+                $.ajax({
+                    url: "{{ route('almuhfazun.group.delete.person') }}",
+                    method: "POST",
+                    data: {
+                        id_talib: id_talib,
+                        id_group: id_group
+                    },
+                    success: function(data) {
+                        if (data == 'success') {
+                            $(parent).hide();
+                        }
+                    }
+
+                });
+            }
+        })
         var get_date = $("#date").val();
 
         var table = $('#getAllStudents').DataTable({
@@ -198,8 +274,20 @@
                     "name": "DT_RowIndex"
                 }, // This is the index column
                 {
+                    data: 'checkbox',
+                    name: 'checkbox',
+                    orderable: false,
+                    searchable: false
+                },
+
+
+                {
                     "data": "get_name"
-                }, // This is the index column
+                },
+                {
+                    data: 'colors',
+
+                },
                 {
                     "data": "degree"
                 }, // This is the index column
@@ -221,6 +309,22 @@
 
         $('#Alhalaqats').change(function() {
             table.ajax.reload(); // Reload the DataTable when the dropdown value changes
+
+            let id = $(this).val();
+
+            $.ajax({
+                url: "{{ route('almuhfazun.alhalaqat.get.room', '') }}" + '/' + id,
+                method: "POST",
+                data: {},
+                success: function(data) {
+                    if (data.room_url == null) {
+                        $("#url_Room").addClass("d-none")
+                    } else {
+                        $("#url_Room").removeClass("d-none")
+                        $("#url_Room").attr("href", data.room_url)
+                    }
+                }
+            });
         });
 
         $('#date').change(function() {
@@ -241,68 +345,7 @@
                 },
                 type: 'POST',
                 success: function(data) {
-                    // if (data.founed == 'true') {
 
-                    //     var attend = '';
-                    //     if (data.Tasmie.attend == 1) {
-                    //         attend = '<span class="bg-success text-white">حاضر</span>';
-                    //     }
-                    //     if (data.Tasmie.attend == 3) {
-                    //         attend = '<span class="bg-primary text-white">حاضر اون لاين</span>';
-                    //     }
-                    //     if (data.Tasmie.attend == 0) {
-                    //         attend = '<span class="bg-danger text-white">غائب</span>';
-                    //     }
-                    //     if (data.Tasmie.attend == 2) {
-                    //         attend = '<span class="bg-warning ">غائب بعذر</span>';
-                    //     }
-
-
-                    //     $(".modal-body").html(`
-                //     <table class="table">
-                //         <thead>
-                //             <tr>
-                //             <td>الاسم :</td>
-                //             <td>${data.Tasmie.talib.name}</td>
-                //             </tr>
-                //              <tr>
-                //             <td>الحضور :</td>
-                //             <td>${attend}</td>
-                //             </tr>
-                //              <tr>
-                //             <td>الدفعة :</td>
-                //             <td>${data.Tasmie.talib.aldafeuh.name}</td>
-                //             </tr>
-                //              <tr>
-                //             <td>المستوى :</td>
-                //             <td>${data.Tasmie.talib.almustawayat.name}</td>
-                //             </tr>
-                //              <tr>
-
-                //             <td>الجزء :</td>
-                //             <td>${data.Tasmie.part.title}</td>
-                //             </tr>
-                //              <tr>
-                //             <td>عدد الأرباع	 :</td>
-                //             <td>${data.Tasmie.number_of_quarters}</td>
-                //             </tr>
-                //               <tr>
-
-                //             <td>المنهج	 :</td>
-                //             <td>${data.Tasmie.almanhaj.title}</td>
-                //             </tr>
-                //               <tr>
-                //             <td>الدرجة	 :</td>
-                //             <td>${data.Tasmie.degree}</td>
-                //             </tr>
-                //              <tr>
-                //             <td>ملاحظات	 :</td>
-                //             <td>${data.Tasmie.comment}</td>
-                //             </tr>
-                //             </thead>
-                //         </table>
-                //     `);
-                    // } else {
 
                     let parts = '';
 
@@ -316,19 +359,19 @@
                             `<option value=${index + 1}>${index + 1}</option>`;
                     })
 
-                    console.log(data);
                     $(".modal-title").html(data.name)
-                    
+
                     if (data.Tasmie == null) {
                         $(".modal-body").html(`
 <h4>ادخال بيانات الطالب : ${name}</h4>
 <form id="tasmie_form"  method="POST">
     @csrf
     <input type="hidden" name="talib_id" value="${id}" />
+    <input type="hidden" name="alhalaqat_id" value="${data.Talibs.alhalaqat.id}" />
     <input type="hidden" name="hidden_date" value="${get_date}"  id="hidden_date" />
     <div class="form-group">
         <labe>الحضور</label>
-           <select name="attend" class="form-control">
+           <select name="attend" class="form-control attend">
             <option value="1">حاضر</option>
             <option value="3">حاضر اون لاين</option>
             <option value="0">غائب</option>
@@ -345,7 +388,8 @@
 
           <div class="form-group">
         <labe>الجزء</label>
-           <select id="parts" name="part_id" class="form-control">
+           <select name="part_id" class="form-control parts" required>
+            <option value="" selected disabled>الجزء</option>
             ${parts} 
         </select>
 
@@ -365,7 +409,7 @@
     </div>
         <div class="form-group">
         <labe>الدرجة</label>
-        <input type="text" required name="degree" class="form-control" />
+        <input type="text" required name="degree" class="form-control degree" />
         
     </div>
         <div class="form-group">
@@ -380,7 +424,7 @@
 `);
 
                     } else {
-
+                        console.log(data);
                         $(".modal-body").html(data.Tasmie)
                     }
 
@@ -403,7 +447,7 @@
                 contentType: false,
                 processData: false,
                 success: function(response) {
-
+                    console.log(response);
                     if (response == 'success') {
                         table.ajax.reload(); // Reload the DataTable when the dropdown value changes
 
@@ -414,11 +458,42 @@
                         });
 
                     }
+                },
+                error: function(err) {
+                    console.log(err)
                 }
             })
         })
 
-        $(document).on("change", "#parts", function() {
+        $(document).on("submit", "#tasmie_update", function(e) {
+            e.preventDefault();
+            let id = $("#tasmie_id").val();
+            let formData = new FormData(this);
+            $.ajax({
+                type: 'POST',
+                url: "{{ route('almuhfazun.tasmie.update', '') }}" + '/' + id,
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function(response) {
+                    if (response == 'success') {
+                        table.ajax.reload(); // Reload the DataTable when the dropdown value changes
+                        Swal.fire({
+                            title: "بنجاح",
+                            text: "تم تعديل البيانات بنجاح",
+                            icon: "success"
+                        });
+
+                    }
+                },
+                error: function(err) {
+                    console.log(err)
+                }
+            })
+
+        });
+
+        $(document).on("change", ".parts", function() {
             var selectedId = $(this).val();
             if (selectedId) {
                 $('#almanhaj').empty();
@@ -442,5 +517,96 @@
                 $('#almanhaj').empty();
             }
         });
+
+        // ادخال الطلاب المجموعات
+        $("#insetListContent").on("click", function() {
+            var selectedValues = [];
+            table.$('input.talib_checkbox:checked').each(function() {
+                selectedValues.push($(this).val());
+            });
+
+
+
+            let id_group = $("#valueList").val();
+            if (id_group == '') {
+                Swal.fire({
+                    title: "خطأ",
+                    text: "حدد الغرفة",
+                    icon: "error"
+                });
+            } else {
+                if (selectedValues.length == 0) {
+                    Swal.fire({
+                        title: "خطأ",
+                        text: "من فضلك حدد الاشخاص",
+                        icon: "error"
+                    });
+                } else {
+                    $.ajax({
+                        url: "{{ route('almuhfazun.group.insert') }}",
+                        type: 'POST',
+                        data: {
+                            id_group: id_group,
+                            selectedValues: selectedValues
+                        },
+                        success: function(data) {
+                            if (data == 'success') {
+                                Swal.fire({
+                                    title: "بنجاح",
+                                    text: "تم الاضافة بنجاح",
+                                    icon: "success"
+                                });
+                            }
+                        },
+                        error: function(err) {
+                            console.log(err)
+                        }
+                    });
+                }
+
+            }
+        });
+        // انشاء مجموعة
+        $("#createroom").on("submit", function(e) {
+            e.preventDefault();
+
+            let room_name = $(".room_name").val();
+            $.ajax({
+                url: "{{ route('almuhfazun.create.room') }}",
+                type: 'POST',
+                data: {
+                    room_name: room_name
+                },
+                success: function(data) {
+                    if (data == 'founded') {
+                        Swal.fire({
+                            title: "خطأ",
+                            text: "الاسم موجود من قبل",
+                            icon: "error"
+                        });
+                    } else {
+                        Swal.fire({
+                            title: "بنجاح",
+                            text: "تم انشأ المجموعة بنجاح",
+                            icon: "success"
+                        });
+                    }
+                    $("#createroom")[0].reset();
+                },
+                error: function(err) {
+                    console.log(err)
+                }
+            });
+        });
+
+        $(document).on("change",".attend",function(){
+
+            var attend = $(this).val();
+            if(attend == 0 || attend == 2){
+                $(".degree").val('0');
+                // $("#degree").attr('disabled', 'disabled');
+
+            }
+        })
     </script>
 @endpush

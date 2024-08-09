@@ -61,6 +61,24 @@
         @enderror
         </div>
         <div class="form-group">
+            <label for="">الايقون</label>
+            <input type="text" required name="icon" value="{{$Page->icon}}" class="form-control">
+            <span><a target="_blank" href="https://fontawesome.com/icons">مكتبة الايقونات</a></span>
+            @error('icon')
+                <div class="text-danger">{{ $message }}</div>
+            @enderror
+        </div>
+        <div class="form-group">
+            <label for="">مكان الظهور</label>
+            <select name="location" required class="form-control">
+                <option value="1" @selected($Page->location == 1)>Header</option>
+                <option value="2" @selected($Page->location == 2)>Container</option>
+            </select>
+            @error('location')
+                <div class="text-danger">{{ $message }}</div>
+            @enderror
+        </div>
+        <div class="form-group">
             <label for="">المحتوي</label>
             <textarea name="content"  class="form-control" cols="30" rows="10">{{$Page->content}}</textarea>
             @error('content')
@@ -74,7 +92,7 @@
                 <span class="form-check-label">تعمل</span>
         </div>
         <div class="form-group">
-            <input type="submit" class="btn btn-teal" value="تعديل">
+            <input type="submit" class="btn btn-teal" value="حفظ">
         </div>
 
       

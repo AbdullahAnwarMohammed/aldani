@@ -3,6 +3,7 @@
 namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Validation\UnauthorizedException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -12,6 +13,8 @@ class Handler extends ExceptionHandler
      *
      * @var array<int, string>
      */
+
+
     protected $dontFlash = [
         'current_password',
         'password',

@@ -13,4 +13,5 @@ class Almanhaj extends Model
     {
         return $this->belongsTo(Almustawayat::class);
     }
+
 }

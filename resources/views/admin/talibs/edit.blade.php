@@ -104,8 +104,8 @@
                     <div class="col">
                         <label for="">الجنس</label>
                         <select name="gender" class="form-control">
-                            <option value="1" @checked($Tailb->gender == 1)>ذكر</option>
-                            <option value="0" @checked($Tailb->gender == 0)>انثي</option>
+                            <option value="1" @selected($Tailb->gender == 1)>ذكر</option>
+                            <option value="0" @selected($Tailb->gender == 0)>انثي</option>
                         </select>
                     </div>
                     <div class="col">
@@ -253,7 +253,7 @@
                 @endif --}}
 
                 <div class="form-group my-2">
-                    <input type="submit" class="btn btn-teal" value="تعديل">
+                    <input type="submit" class="btn btn-teal" value="حفظ">
                 </div>
             </form>
         </div>

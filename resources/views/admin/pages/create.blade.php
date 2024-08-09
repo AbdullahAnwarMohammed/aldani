@@ -18,13 +18,12 @@
 
 
                         <a href="{{ route('admin.pages.index') }}" class=" btn btn-dark d-none d-sm-inline-block">
-                            <!-- Download SVG icon from http://tabler-icons.io/i/plus -->
-                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
-                                viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
-                                stroke-linecap="round" stroke-linejoin="round">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-arrow-back-up"
+                                width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffffff"
+                                fill="none" stroke-linecap="round" stroke-linejoin="round">
                                 <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                <path d="M12 5l0 14" />
-                                <path d="M5 12l14 0" />
+                                <path d="M9 14l-4 -4l4 -4" />
+                                <path d="M5 10h11a4 4 0 1 1 0 8h-1" />
                             </svg>
                             الصفحات
                         </a>
@@ -48,22 +47,41 @@
 @endsection
 @section('content')
     @if (Session::has('success'))
-        <div class="alert alert-success">{{Session::get('success')}}</div>
+        <div class="alert alert-success">{{ Session::get('success') }}</div>
     @endif
-    <form action="{{route('admin.pages.store')}}" method="POST">
+    <form action="{{ route('admin.pages.store') }}" method="POST">
         @csrf
         <div class="form-group">
             <label for="">اسم الصفحة</label>
             <input type="text" name="name" class="form-control">
             @error('name')
-            <div class="text-danger">{{$message}}</div>
-        @enderror
+                <div class="text-danger">{{ $message }}</div>
+            @enderror
+        </div>
+        <div class="form-group">
+            <label for="">الايقون</label>
+            <input type="text" required name="icon" class="form-control">
+            <span><a target="_blank" href="https://fontawesome.com/icons">مكتبة الايقونات</a></span>
+
+            @error('icon')
+                <div class="text-danger">{{ $message }}</div>
+            @enderror
+        </div>
+        <div class="form-group">
+            <label for="">مكان الظهور</label>
+            <select name="location" required class="form-control">
+                <option value="1">Header</option>
+                <option value="2">Container</option>
+            </select>
+            @error('location')
+                <div class="text-danger">{{ $message }}</div>
+            @enderror
         </div>
         <div class="form-group">
             <label for="">المحتوي</label>
             <textarea name="content" class="form-control" cols="30" rows="10"></textarea>
             @error('content')
-                <div class="text-danger">{{$message}}</div>
+                <div class="text-danger">{{ $message }}</div>
             @enderror
         </div>
         <div class="form-group my-2">
@@ -76,7 +94,7 @@
             <input type="submit" class="btn btn-teal" value="انشاء">
         </div>
 
-      
+
     </form>
 @endsection
 

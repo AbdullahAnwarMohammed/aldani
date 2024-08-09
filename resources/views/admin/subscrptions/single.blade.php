@@ -1,7 +1,7 @@
 @extends('admin.layouts.app')
 {{--
-11:20
-2:30 - 
+13/7
+8:20 - 9:05
  --}}
 
 
@@ -33,7 +33,7 @@
                                 <path d="M12 5l0 14" />
                                 <path d="M5 12l14 0" />
                             </svg>
-                            طباعة فاتورة
+                             تسديد اشتراك
                         </a>
 
                         <a href="{{ route('admin.subscrption.add', $Talib->id) }}"
@@ -113,7 +113,7 @@
                     <td>
                         <a href="{{route('admin.subscrption.payments',$Item->id)}}"  class="btn btn-sm btn-outline-teal open-paid update-s"
                         >
-                         المدفوعات
+                         فاتورة
                      </a>
                         {{-- <a href="{{ route('admin.subscrption.invoice', [$Talib->id, $Item->id]) }}"
                             class="btn btn-info btn-sm">

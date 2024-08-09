@@ -11,14 +11,17 @@
                     <h2 class="page-title">
                         المحفظون
                     </h2>
+                    <a href="{{route('admin.users.export')}}" class="btn btn-success">تصدير EXCEL</a>
                 </div>
+           
+
 
                 <div class="col-auto ms-auto d-print-none">
                     <div class="btn-list">
 
 
 
-                        <a href="#" class="openModal btn btn-teal d-none d-sm-inline-block" data-bs-toggle="modal"
+                        <a href="#" class="openModal btn btn-info d-none d-sm-inline-block" data-bs-toggle="modal"
                             data-bs-target="#modal-add">
                             <!-- Download SVG icon from http://tabler-icons.io/i/plus -->
                             <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
@@ -155,6 +158,27 @@
 
         </div>
     @endif
+    <div class="row">
+        <div class="col-12">
+            <form action="{{route('admin.users.index')}}"  class="row gx-3 gy-2 align-items-center" method="GET">
+                <div class="col-sm-3">
+                  <label class="visually-hidden" for="specificSizeInputGroupUsername">Username</label>
+                  <div class="input-group">
+                    <div class="input-group-text">الجنس</div>
+                    {{-- <input type="text" class="form-control" id="specificSizeInputGroupUsername" placeholder="Username"> --}}
+                    <select name="gender" class="form-control">
+                        <option value="" selected disabled>اختر الجنس</option>
+                        <option value="1">ذكور</option>
+                        <option value="0">آناث</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-auto">
+                  <button type="submit" class="btn btn-primary">فلتر</button>
+                </div>
+              </form>
+        </div>
+    </div>
     <div class="table-responsive">
         <table id="mangers" class="table  table-bordered table-sm" style="width:100%">
             <thead>
@@ -194,43 +218,51 @@
                         <td>{{ $Item->phone }}</td>
                         <td>{{ $Item->showPassword }}</td>
                         <td>
-
-                            <form action="{{ route('admin.users.delete', $Item->id) }}" method="POST"
-                                onsubmit="return confirm('سوف تقوم بالحذف')">
-                                @csrf
-                                @method('DELETE')
-                                {{-- <a href="#" class="btn btn-indigo btn-sm update-btn" data-id="{{ $Item->id }}"
-                                    class="btn btn-sm btn-primary">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-edit"
-                                        width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5"
-                                        stroke="#ffffff" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                        <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" />
-                                        <path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z" />
-                                        <path d="M16 5l3 3" />
-                                    </svg>
-                                    تعديل
-
-                                </a> --}}
-                                <button type="submit" href="#" class="btn btn-outline-danger btn-sm">
-                                    <svg xmlns="http://www.w3.org/2000/svg"
-                                        class="icon icon-tabler icon-tabler-trash-filled" width="44" height="44"
-                                        viewBox="0 0 24 24" stroke-width="1.5" stroke="#000000" fill="none"
-                                        stroke-linecap="round" stroke-linejoin="round">
-                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                        <path
-                                            d="M20 6a1 1 0 0 1 .117 1.993l-.117 .007h-.081l-.919 11a3 3 0 0 1 -2.824 2.995l-.176 .005h-8c-1.598 0 -2.904 -1.249 -2.992 -2.75l-.005 -.167l-.923 -11.083h-.08a1 1 0 0 1 -.117 -1.993l.117 -.007h16z"
-                                            stroke-width="0" fill="currentColor" />
-                                        <path
-                                            d="M14 2a2 2 0 0 1 2 2a1 1 0 0 1 -1.993 .117l-.007 -.117h-4l-.007 .117a1 1 0 0 1 -1.993 -.117a2 2 0 0 1 1.85 -1.995l.15 -.005h4z"
-                                            stroke-width="0" fill="currentColor" />
-                                    </svg>
-                                    حذف</button>
-
-                                <a href="{{ route('admin.users.halqa', $Item->id) }}"
-                                    class="btn btn-outline-info btn-sm">الحلقات</a>
-
-                            </form>
+                            <div class="dropdown">
+                                <button class="btn btn-warning dropdown-toggle align-text-top" data-bs-toggle="dropdown"
+                                    aria-expanded="false">
+                                    الخيارات
+                                </button>
+                                <div class="dropdown-menu dropdown-menu-end" style="">
+                                    <a href="{{ route('admin.users.halqa', $Item->id) }}"
+                                        class="fw-bold  dropdown-item">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link-minus" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#000000" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                            <path d="M9 15l6 -6" />
+                                            <path d="M11 6l.463 -.536a5 5 0 1 1 7.071 7.072l-.534 .464" />
+                                            <path d="M12.603 18.534a5.07 5.07 0 0 1 -7.127 0a4.972 4.972 0 0 1 0 -7.071l.524 -.463" />
+                                            <path d="M16 19h6" />
+                                          </svg>
+                                        الحلقات</a>
+                                    @can('حذف حافظ')
+                                        <form class="dropdown-item d-inline" id="deletealmustawaya"
+                                           action="{{ route('admin.users.delete', $Item->id) }}"
+                                            onsubmit="return confirm('سوف تقوم بحذف العنصر')" method="POST">
+                                            @csrf
+                                            @method('DELETE')
+    
+                                            <button style="border: none;background:none;width:100%;"
+                                                class="fw-bold text-danger px-0 py-1 text-end">
+                                                <svg xmlns="http://www.w3.org/2000/svg"
+                                                    class="icon icon-tabler icon-tabler-trash-off" width="44"
+                                                    height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ff4500"
+                                                    fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                    <path d="M3 3l18 18" />
+                                                    <path d="M4 7h3m4 0h9" />
+                                                    <path d="M10 11l0 6" />
+                                                    <path d="M14 14l0 3" />
+                                                    <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l.077 -.923" />
+                                                    <path d="M18.384 14.373l.616 -7.373" />
+                                                    <path d="M9 5v-1a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
+                                                </svg>
+                                                حذف</button>
+                                        </form>
+                                    @endcan
+    
+    
+                                </div>
+                            </div> 
                         </td>
                     </tr>
                 @empty

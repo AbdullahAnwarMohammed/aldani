@@ -28,6 +28,11 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request): RedirectResponse
     {
+        if(getYearSetting()->login_almuhfazin == 0 || getYearSetting()->login_almuhfazin == 0)
+        {
+            return redirect()->back()->with('error',getYearSetting()->message_close_site);
+        }
+        
         $request->authenticate();
 
         $request->session()->regenerate();

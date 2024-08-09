@@ -46,7 +46,6 @@ class Talib extends Model
     public function aldafeuh()
     {
         return $this->belongsTo(Aldafeuh::class);
-
     }
 
 
@@ -58,23 +57,6 @@ class Talib extends Model
     }
   
 
-    // function getTotalSubscriptionDays($userId)
-    // {
-    //     $subscriptions = Subscrption::where('talib_id', $userId)->get();
-    
-    //     $totalDays = 0;
-    
-    //     foreach ($subscriptions as $subscription) {
-    //         $start_date = Carbon::parse($subscription->reg_start);
-    //         $end_date = Carbon::parse($subscription->reg_end);
-    
-    //         $days = $end_date->diffInDays($start_date);
-    
-    //         $totalDays += $days;
-    //     }
-    
-    //     return $totalDays;
-    // }
     // معرفة المبلغ المالي المدفوع
     public function get_total_count_paid()
     {
@@ -86,6 +68,7 @@ class Talib extends Model
         return $Count;
     }
 
+
     public function get_singal_total_count_paid($subscrption_id)
     {
         $Count = 0;
@@ -96,4 +79,18 @@ class Talib extends Model
         return $Count;
     }
 
+
+
+    // معرفة حضور او غيار او !! اليوم 
+    public function attend($date)
+    {
+        return Tasmie::where('talib_id',$this->id)
+        ->where('date',$date)
+        ->pluck('attend')
+        ->first();
+    }
+
+
+
+   
 }

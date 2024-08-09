@@ -10,9 +10,13 @@ use Illuminate\Http\Request;
 
 class AlmustawayatController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    public function __construct()
+    {
+        $this-> middleware('permission:قائمة المستويات', ['only' => ['index']]);
+        $this-> middleware('permission:قائمة المنهج', ['only' => ['almanhaj']]);
+        $this-> middleware('permission:اضافة الاجزاء المضافة', ['only' => ['parts']]);
+
+    }
     public function index()
     {
         $Almustawayas = Almustawayat::all();
@@ -56,14 +60,16 @@ class AlmustawayatController extends Controller
      */
     public function edit(Request $request,string $id)
     {
-      
+        $Almustawaya = Almustawayat::where('id',$id)->first();
+
+        return view("admin.almustawayat.edit",compact('Almustawaya'));
+
     }
 
 
 
     public function update(Request $request, string $id)
-    {
-
+    {   
          // Validation
          $request->validate([
             'name'=>'required|unique:almustawayats,name,'.$id
@@ -74,7 +80,8 @@ class AlmustawayatController extends Controller
             'name' => $request->name,
             'comment' => $request->comment
         ]);
-        return response()->json(['status'=>201,'type'=>'update']);
+        // return response()->json(['status'=>201,'type'=>'update']);
+        return redirect()->back()->with('success','تم التعديل بنجاح');
 
     }
 
@@ -159,7 +166,7 @@ class AlmustawayatController extends Controller
         $idPart  = $request->idPart;
 
         $validatedData = $request->validate([
-            'title.*' => 'required|string|unique:almanhajs,title|numeric',
+            'title.*' => 'required|string|unique:almanhajs,title',
         ]);
 
         foreach ($request->title as $key => $Title) {
@@ -203,4 +210,21 @@ class AlmustawayatController extends Controller
         return redirect()->back()->with('delete','تم الحذف بنجاح');  
     }
 
+    // تعديل المنهج
+    public function almanhajEdit($id)
+    {
+        $Item = Almanhaj::where('id',$id)->first();
+
+        return view("admin.almustawayat.almanhajs.edit",compact('Item'));
+
+    }
+
+    public function almanhajUpdate($id,Request $request)
+    {
+        Almanhaj::where('id',$id)->update([
+            'title' => $request->title
+        ]);
+        return redirect()->back()->with('success','تم التعديل بنجاح');
+
+    }
 }

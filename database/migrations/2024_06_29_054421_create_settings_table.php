@@ -25,8 +25,9 @@ return new class extends Migration
             $table->string("twitter_site")->nullable();
             $table->string("youtube_site")->nullable();
             $table->string("instgram_site")->nullable();
+            $table->string("whatsapp")->nullable();
             $table->string("address")->nullable();
-            $table->string("maps")->nullable();
+            $table->longText("maps")->nullable();
             $table->string("message_close_site")->nullable();
             $table->integer("year")->default(date("Y"));    
                     

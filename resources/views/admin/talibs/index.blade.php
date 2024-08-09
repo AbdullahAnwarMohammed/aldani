@@ -12,6 +12,8 @@
                     <h2 class="page-title">
                         الحافظون
                     </h2>
+                    <a href="{{route('admin.talibs.export')}}" class="btn btn-success">تصدير EXCEL</a>
+
                 </div>
                 <!-- Page title actions -->
                 <div class="col-auto ms-auto d-print-none">
